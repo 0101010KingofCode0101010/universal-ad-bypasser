@@ -29,7 +29,7 @@ This hybrid engine ensures maximum compatibility and blocking power, crushing bo
 -   **✅ Kills Popups & Pop-unders.**
 -   **✅ Lightweight & Fast:** Caches the blocklist for instant performance.
 
-## D_🔧 Installation
+## 🔧 Installation
 
 1.  You need a userscript manager like **[Tampermonkey](https://www.tampermonkey.net/)**.
 2.  Click the link below to install the latest version:
