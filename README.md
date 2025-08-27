@@ -2,46 +2,41 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-The ultimate companion for your ad-blocker, now featuring an **Instant-On Interception Engine** to defeat the most aggressive, time-sensitive anti-adblock scripts.
+The ultimate ad-blocker companion, re-engineered with a **Stealth Proxy Engine** to be completely undetectable by advanced anti-adblock scripts.
 
 ---
 
-## ✨ NEW in v2.2: The Instant-On Interception Engine!
+## ✨ NEW in v2.3: The Stealth Proxy Engine!
 
-Some websites are tricky. They run an anti-adblock check the *instant* the page starts loading, trying to win the "race" against blocker scripts. Version 2.2 is engineered to win that race, every time.
+**The Problem:** Modern anti-adblock scripts don't just check if ads are blocked. They check if you've *tampered* with browser functions like `window.fetch`. Previous versions of this script modified these functions directly, leaving a clear footprint that was easy to detect via a `function.toString()` check.
 
-**How it works:**
-1.  **Instant Activation:** The moment the script runs, its core blocking functions (`fetch`, `XHR`) are *immediately* activated. There is zero delay.
-2.  **Priority Blocking:** It instantly starts blocking using a small, high-priority list of known anti-adblock "bait" domains and keywords.
-3.  **Background Hydration:** While the priority shield is active, the script silently fetches and "hydrates" the massive community blocklist in the background for comprehensive protection.
+**The Solution:** This version introduces a revolutionary **Proxy-based Interception Engine**.
+-   **It wraps the `window` object** in an invisible proxy layer.
+-   **It does NOT modify original browser functions.** `window.fetch` remains untouched and passes any integrity check.
+-   **It intercepts calls on-the-fly.** When a site's script tries to *use* `window.fetch`, our proxy stealthily hands it a fake, filtered version instead of the real one.
 
-This new architecture ensures that no anti-adblock script can slip through during the first few milliseconds of page load.
+The anti-adblock script is tricked into using our filtered functions, believing they are the original, untampered ones. **This makes the script virtually undetectable.**
 
 ## 🚀 Features
 
--   **✅ Instant-On Interception Engine:** Wins the race against the fastest anti-adblock scripts.
+-   **✅ Undetectable Stealth Engine:** Bypasses advanced anti-adblock that uses function integrity (`toString()`) checks.
 -   **✅ Hybrid Blocking Power:** Combines a high-priority manual list with a massive, auto-updating community list.
--   **✅ Your Ad-Blocker's Best Friend:** Works perfectly alongside uBlock Origin, AdGuard, etc.
+-   **✅ Your Ad-Blocker's Best Friend:** Works in harmony with uBlock Origin, AdGuard, etc.
 -   **✅ Kills Popups & Pop-unders.**
--   **✅ Lightweight & Fast:** Caches the main blocklist and uses an efficient, instant-on approach.
+-   **✅ Lightweight & Fast:** Caches the main blocklist for instant performance.
 
 ## 🔧 Installation
 
 1.  You need a userscript manager like **[Tampermonkey](https://www.tampermonkey.net/)**.
-2.  Click the link below to get the latest, most powerful version:
+2.  Click the link below to install the latest, most powerful version:
 
     **➡️ [Install Universal Ad-Bypasser](https://github.com/0101010KingofCode0101010/universal-ad-bypasser/raw/main/universal-ad-bypasser.user.js)**
 
 3.  Click **"Install"** in the Tampermonkey tab that opens.
 
-## ⚙️ Configuration
-
--   `MANUAL_BLOCKLIST`: This is now your high-priority list. Add keywords or domains here that need to be blocked *instantly*.
--   `REMOTE_BLOCKLIST`: The URL for the main community list, loaded in the background.
-
 ## 🤝 How to Contribute
 
--   **Report a Site:** Find a website that still gets through? [Open an issue](https://github.com/0101010KingofCode0101010/universal-ad-bypasser/issues). Your report helps make the script smarter.
+-   **Report a Site:** Find a website that still gets through? Please [open an issue](https://github.com/0101010KingofCode0101010/universal-ad-bypasser/issues).
 -   **Suggest Improvements:** Fork the repository and submit a pull request!
 
 ## 📄 License
