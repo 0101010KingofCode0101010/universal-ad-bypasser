@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Universal Ad-Bypasser
 // @namespace    https://github.com/0101010KingofCode0101010/universal-ad-bypasser
-// @version      1.0.0
-// @description  A powerful, lightweight, and configurable userscript to block ads, popups, trackers, and bypass anti-adblock mechanisms on most websites. A standalone alternative to ad-blocking extensions.
+// @version      1.1.0
+// @description  Works alongside your ad-blocker (uBlock, AdGuard) to defeat the most aggressive anti-adblock scripts and stubborn ads. Your second layer of defense.
 // @author       NoName
 // @match        *://*/*
 // @exclude      /^https?://(www\.)?(google|youtube|facebook|twitter|instagram)\..*/
@@ -19,10 +19,14 @@
     const CONFIG = {
         debug: false,
         BLOCKLIST: [
+            // Common Ad & Tracker Networks
             'googlesyndication.com', 'doubleclick.net', 'adservice.google.com', 'adsterra.com',
             'exoclick.com', 'popads.net', 'ad-maven.com', 'propellerads.com', 'yandex.ru/ads',
-            'google-analytics.com', 'yandex.ru/metrika', 'hotjar.com', 'clarity.ms', 'taboola.com',
-            'outbrain.com', 'disqus.com', 'ad-block', 'adblock', 'fuckadblock', 'anti-adblock'
+            'google-analytics.com', 'yandex.ru/metrika', 'hotjar.com', 'clarity.ms',
+            // Annoying Widgets & Content Discovery
+            'taboola.com', 'outbrain.com', 'disqus.com',
+            // Keywords for detecting anti-adblock scripts
+            'ad-block', 'adblock', 'fuckadblock', 'anti-adblock'
         ],
         CSS_SELECTORS_TO_HIDE: [
             '.ad', '.ads', '.adsbox', '.ad-banner', '.ad-container', '.ad-wrapper', '.ad-placeholder',
@@ -44,6 +48,7 @@
     const originalWindowOpen = unsafeWindow.open;
 
     function isBlocked(urlString) {
+        if (!urlString) return false;
         try {
             const url = new URL(urlString, window.location.origin);
             return CONFIG.BLOCKLIST.some(keyword => url.href.includes(keyword));
@@ -53,7 +58,7 @@
     }
 
     unsafeWindow.fetch = function(resource, options) {
-        const url = (resource instanceof Request) ? resource.url : resource;
+        const url = (resource instanceof Request) ? resource.url : String(resource);
         if (isBlocked(url)) {
             log(`Blocked FETCH: ${url}`);
             return Promise.resolve(new Response(null, { status: 204, statusText: "No Content" }));
