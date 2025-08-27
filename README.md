@@ -2,62 +2,58 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-The ultimate companion for your ad-blocker (uBlock Origin, AdGuard). This script is your **second layer of defense**, defeating aggressive anti-adblock scripts with a **dynamically updated, community-powered blocklist.**
+The ultimate companion for your ad-blocker. This script combines a massive, auto-updating domain blocklist with precise, keyword-based filtering to defeat even the most aggressive, self-hosted anti-adblock scripts.
 
 ---
 
-## ✨ NEW in v2.0: Auto-Updating Blocklist!
+## ✨ NEW in v2.1: The Hybrid Blocking Engine!
 
-This script now automatically fetches and caches a massive, professionally maintained list of ad, tracker, and malware domains from the [Steven Black hosts project](https://github.com/StevenBlack/hosts).
+This version introduces a powerful **dual-check mechanism**, getting the best of both worlds:
 
-**What this means for you:**
--   **Effortless Power:** You get the blocking power of tens of thousands of rules without manually adding them.
--   **Always Up-to-Date:** The list silently updates itself every 24 hours, keeping you protected from new threats.
--   **Smarter Blocking:** Your browsing is safer and cleaner than ever before.
+1.  **Precision Keyword Filtering (Your `MANUAL_BLOCKLIST`):**
+    *   **How:** Scans the *entire URL* for specific keywords (like `adblock`, `anti-adblock`).
+    *   **Why:** This is the "scalpel". It catches tricky, self-hosted scripts (e.g., `domain.com/js/anti-adblock.js`) that broad-spectrum blockers miss. This is what makes it work on sites like `lxmanga`.
 
-## 🤔 How It Works
+2.  **Broad Domain Blocking (The `REMOTE_BLOCKLIST`):**
+    *   **How:** Checks the *domain name* against a massive, auto-updating list of tens of thousands of known ad/tracker domains.
+    *   **Why:** This is the "shotgun". It provides comprehensive, high-performance blocking of common ad networks.
 
-Your primary ad-blocker is great for 99% of cases. Universal Ad-Bypasser handles the tough 1% by:
-1.  **Fetching Community Lists:** Downloads a comprehensive list of known ad/malware domains.
-2.  **Executing First:** Runs before the website's own scripts, getting a critical head start.
-3.  **Direct Interception:** Overrides browser functions (`fetch`, `XHR`) to neutralize anti-adblock scripts before they can even run.
-
-It's the intelligence unit that provides critical data to your main army.
+This hybrid engine ensures maximum compatibility and blocking power, crushing both common ads and site-specific anti-adblock.
 
 ## 🚀 Features
 
+-   **✅ Hybrid Blocking Engine:** Catches both broad ad-networks and specific anti-adblock scripts.
 -   **✅ Auto-Updating Blocklist:** Stays current with thousands of rules from community sources.
 -   **✅ Your Ad-Blocker's Best Friend:** Works perfectly alongside uBlock Origin, AdGuard, etc.
--   **✅ Defeats Aggressive Anti-Adblock:** Neutralizes scripts that complain about your ad-blocker.
--   **✅ Kills Popups & Pop-unders:** Prevents annoying new tabs from opening.
--   **✅ Lightweight & Fast:** Caches the blocklist for instant performance on every page load.
+-   **✅ Defeats Aggressive Anti-Adblock:** The #1 reason to use this script.
+-   **✅ Kills Popups & Pop-unders.**
+-   **✅ Lightweight & Fast:** Caches the blocklist for instant performance.
 
-## 🔧 Installation
+## D_🔧 Installation
 
-1.  You need a userscript manager. The best is **[Tampermonkey](https://www.tampermonkey.net/)**. Install it for your browser.
-2.  Then, click the link below to install the script. The link always points to the latest version.
+1.  You need a userscript manager like **[Tampermonkey](https://www.tampermonkey.net/)**.
+2.  Click the link below to install the latest version:
 
     **➡️ [Install Universal Ad-Bypasser](https://github.com/0101010KingofCode0101010/universal-ad-bypasser/raw/main/universal-ad-bypasser.user.js)**
 
-3.  Tampermonkey will open. Simply review the permissions and click **"Install"**.
+3.  Click **"Install"** in the Tampermonkey tab that opens.
 
 ## ⚙️ Configuration
 
-You can still add your own rules by editing the script in the Tampermonkey dashboard.
+You can power-up the script by editing it in the Tampermonkey dashboard.
 
--   `MANUAL_BLOCKLIST`: Add your personal keywords or domains here. They will be combined with the remote list.
--   `REMOTE_BLOCKLIST`: You can change the URL to a different hosts file or adjust the update interval.
+-   `MANUAL_BLOCKLIST`: Add keywords here to stop a specific site's anti-adblock.
+-   `REMOTE_BLOCKLIST`: Change the URL to a different hosts file or adjust the update interval.
+-   `CSS_SELECTORS_TO_HIDE`: Add CSS classes/IDs to hide empty ad boxes.
 
 ## 🤝 How to Contribute
 
-Your help makes the script better for everyone!
-
--   **Report a Site:** Find a website where the script fails? Please [open an issue](https://github.com/0101010KingofCode0101010/universal-ad-bypasser/issues).
--   **Suggest Improvements:** Have an idea for a new feature? Fork the repository and submit a pull request!
+-   **Report a Site:** Find a website that defeats the script? Please [open an issue](https://github.com/0101010KingofCode0101010/universal-ad-bypasser/issues).
+-   **Suggest Improvements:** Fork the repository and submit a pull request!
 
 ## 📄 License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.
 
 ## ✨ Credits
 
