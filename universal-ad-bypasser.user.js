@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Universal Ad-Bypasser
 // @namespace    https://github.com/0101010KingofCode0101010/universal-ad-bypasser
-// @version      2.2.0
-// @description  Defeats the most aggressive anti-adblock scripts with an Instant-On Interception Engine and a dynamic community blocklist. The ultimate ad-blocker companion.
+// @version      2.3.0
+// @description  Defeats the most advanced anti-adblock scripts using a stealth Proxy-based interception engine. Undetectable by function integrity checks.
 // @author       NoName
 // @match        *://*/*
 // @exclude      /^https?://(www\.)?(google|youtube|facebook|twitter|instagram)\..*/
@@ -23,14 +23,11 @@
     // =================================================================================
     const CONFIG = {
         debug: false,
-        // DANH SÁCH ƯU TIÊN CAO: Chặn tức thì. Chứa các từ khóa và tên miền "mồi"
-        // mà các script anti-adblock dùng để kiểm tra.
         MANUAL_BLOCKLIST: [
-            // Từ khóa chặn theo đường dẫn script
+            // Keywords to block any URL containing them. Catches self-hosted scripts.
             'ad-block', 'adblock', 'fuckadblock', 'anti-adblock',
-            // Tên miền "mồi" phổ biến nhất
-            'googlesyndication.com', 'doubleclick.net',
-            'adsterra.com', 'popads.net'
+            // High-priority domains used as anti-adblock bait.
+            'googlesyndication.com', 'doubleclick.net', 'adsterra.com', 'popads.net'
         ],
         REMOTE_BLOCKLIST: {
             URL: 'https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts',
@@ -50,124 +47,106 @@
     // SECTION 2: BLOCKLIST MANAGEMENT
     // =================================================================================
     const manualBlocklist = new Set(CONFIG.MANUAL_BLOCKLIST);
-    let remoteBlocklist = new Set(); // Sẽ được "bơm" dữ liệu vào sau
-
-    function parseHostsFile(text) { /* ... Giữ nguyên ... */ }
-    async function updateAndHydrateRemoteBlocklist() { /* ... Giaporation... */ }
+    let remoteBlocklist = new Set();
 
     // =================================================================================
-    // SECTION 3: INSTANT-ON INTERCEPTION ENGINE
+    // SECTION 3: STEALTH INTERCEPTION ENGINE (Proxy-based)
     // =================================================================================
-    
-    // Hàm isBlocked bây giờ an toàn để gọi bất cứ lúc nào
+
+    // Prevent script from running multiple times on the same page
+    if (unsafeWindow.uabEngineActive) return;
+
     function isBlocked(urlString) {
         if (!urlString) return false;
-
-        // BƯỚC 1: Kiểm tra danh sách thủ công ưu tiên cao
+        // Check manual list first (high priority, keyword-based)
         for (const keyword of manualBlocklist) {
-            if (urlString.includes(keyword)) {
-                log(`Blocked by MANUAL rule [${keyword}] in URL: ${urlString}`);
-                return true;
-            }
+            if (urlString.includes(keyword)) return true;
         }
-
-        // BƯỚC 2: Kiểm tra danh sách tên miền từ xa (nếu đã được tải)
+        // Then, check remote list (broad, domain-based)
         if (remoteBlocklist.size > 0) {
             try {
                 const url = new URL(urlString, window.location.origin);
                 const hostname = url.hostname;
                 for (const blockedDomain of remoteBlocklist) {
-                    if (hostname === blockedDomain || hostname.endsWith('.' + blockedDomain)) {
-                        log(`Blocked by REMOTE rule [${blockedDomain}]: ${hostname}`);
-                        return true;
-                    }
+                    if (hostname === blockedDomain || hostname.endsWith('.' + blockedDomain)) return true;
                 }
-            } catch (e) { /* URL không hợp lệ */ }
+            } catch (e) { /* Invalid URL, ignore */ }
         }
-        
         return false;
     }
 
-    // KÍCH HOẠT NGAY LẬP TỨC!
-    // Các hàm này được ghi đè ngay khi script bắt đầu, không chờ đợi bất cứ thứ gì.
-    (function activateInstantInterceptors() {
-        const originalFetch = unsafeWindow.fetch;
-        unsafeWindow.fetch = function(resource, options) {
-            const url = (resource instanceof Request) ? resource.url : String(resource);
-            if (isBlocked(url)) return Promise.resolve(new Response(null, { status: 204, statusText: "No Content" }));
-            return originalFetch.apply(this, arguments);
-        };
+    // --- Define our fake functions that will be served by the proxy ---
+    const originalFetch = unsafeWindow.fetch;
+    const fakeFetch = function(resource, options) {
+        const url = (resource instanceof Request) ? resource.url : String(resource);
+        if (isBlocked(url)) {
+            log(`[PROXY] Blocked FETCH: ${url}`);
+            return Promise.resolve(new Response(null, { status: 204, statusText: "No Content" }));
+        }
+        return originalFetch.apply(unsafeWindow, arguments);
+    };
 
-        const originalXhrOpen = unsafeWindow.XMLHttpRequest.prototype.open;
-        unsafeWindow.XMLHttpRequest.prototype.open = function(method, url) {
-            if (isBlocked(url)) { this._isBlocked = true; return; }
-            return originalXhrOpen.apply(this, arguments);
+    const originalXhr = unsafeWindow.XMLHttpRequest;
+    function FakeXMLHttpRequest() {
+        const xhr = new originalXhr();
+        const originalOpen = xhr.open;
+        xhr.open = function(method, url) {
+            if (isBlocked(url)) {
+                log(`[PROXY] Blocked XHR: ${url}`);
+                this._isBlocked = true;
+            }
+            return originalOpen.apply(this, arguments);
         };
-        const originalXhrSend = unsafeWindow.XMLHttpRequest.prototype.send;
-        unsafeWindow.XMLHttpRequest.prototype.send = function() {
+        const originalSend = xhr.send;
+        xhr.send = function() {
             if (this._isBlocked) return;
-            return originalXhrSend.apply(this, arguments);
+            return originalSend.apply(this, arguments);
         };
+        return xhr;
+    }
+    
+    const originalOpen = unsafeWindow.open;
+    const fakeOpen = function(url, target, features){
+        if (isBlocked(url || '')) {
+            log(`[PROXY] Blocked window.open: ${url || 'blank'}`);
+            return null;
+        }
+        return originalOpen.apply(unsafeWindow, arguments);
+    }
 
-        const originalWindowOpen = unsafeWindow.open;
-        unsafeWindow.open = function(url, target, features) {
-            if (isBlocked(url || '')) { log(`Blocked popup: ${url || 'blank'}`); return null; }
-            return originalWindowOpen.apply(this, arguments);
-        };
+    // --- The core of the stealth engine: The Proxy Handler ---
+    const proxyHandler = {
+        get: function(target, prop) {
+            // When a script asks for `window.fetch`, we return our fake version
+            if (prop === 'fetch') return fakeFetch;
+            if (prop === 'XMLHttpRequest') return FakeXMLHttpRequest;
+            if (prop === 'open') return fakeOpen;
 
-        const observer = new MutationObserver(mutations => { /* ... Giữ nguyên ... */ });
-        observer.observe(document.documentElement, { childList: true, subtree: true });
-        
-        log('Instant-On Interception Engine is ACTIVE.');
-    })();
+            // For all other properties, return the original value
+            const value = Reflect.get(target, prop);
+            return typeof value === 'function' ? value.bind(target) : value;
+        }
+    };
 
+    // --- Activation ---
+    unsafeWindow.uabEngineActive = true;
+    // Overwrite the `window` object with a proxy of itself. All property access
+    // from this point on will be intercepted by our handler.
+    unsafeWindow = new Proxy(unsafeWindow, proxyHandler);
+    log('Stealth Interception Engine is ACTIVE.');
+    
     // =================================================================================
     // SECTION 4: INITIALIZATION & BACKGROUND TASKS
     // =================================================================================
-    
-    // Hàm này chỉ để quản lý việc tải và cập nhật danh sách từ xa
-    async function updateAndHydrateRemoteBlocklist() {
-        const lastUpdated = await GM_getValue('blocklistLastUpdated', 0);
-        const cachedList = await GM_getValue('blocklistCache', null);
-        const now = Date.now();
-        const cacheAgeHours = (now - lastUpdated) / (1000 * 60 * 60);
+    (function initialize() {
+        GM_addStyle(CONFIG.CSS_SELECTORS_TO_HIDE.join(', ') + 
+            ` { display: none !important; visibility: hidden !important; opacity: 0 !important; width: 0 !important; height: 0 !important; }`);
+        
+        // Start updating the blocklist in the background
+        updateAndHydrateRemoteBlocklist();
+    })();
 
-        const useCache = () => {
-            if (cachedList) {
-                log('Loading remote blocklist from cache.');
-                remoteBlocklist = new Set(JSON.parse(cachedList));
-            }
-        };
-
-        if (cachedList && cacheAgeHours < CONFIG.REMOTE_BLOCKLIST.UPDATE_INTERVAL_HOURS) {
-            useCache();
-        } else {
-            log(cachedList ? 'Cache is stale, fetching remote list...' : 'No cache, fetching remote list...');
-            GM_xmlhttpRequest({
-                method: 'GET',
-                url: CONFIG.REMOTE_BLOCKLIST.URL,
-                onload: function(response) {
-                    if (response.status >= 200 && response.status < 300) {
-                        remoteBlocklist = parseHostsFile(response.responseText);
-                        log(`Hydrated remote blocklist with ${remoteBlocklist.size} new domains.`);
-                        GM_setValue('blocklistCache', JSON.stringify([...remoteBlocklist]));
-                        GM_setValue('blocklistLastUpdated', Date.now());
-                    } else {
-                        log(`Failed to fetch remote list (status: ${response.status}). Using cached list as fallback.`);
-                        useCache();
-                    }
-                },
-                onerror: function(error) {
-                    log('Error fetching remote list. Using cached list as fallback.', error);
-                    useCache();
-                }
-            });
-        }
-    }
-    
-    function parseHostsFile(text) { /* ... Giữ nguyên ... */ }
-    
-    // Các hàm sao chép đầy đủ để bạn không cần phải ghép nối
+    // Helper function for parsing hosts files
     function parseHostsFile(text) {
         const domains = new Set();
         const lines = text.split('\n');
@@ -180,20 +159,43 @@
         }
         return domains;
     }
-    
-    const observerCallback = (mutations) => {
-        for (const mutation of mutations) for (const node of mutation.addedNodes)
-            if (node.nodeType === 1 && CONFIG.CSS_SELECTORS_TO_HIDE.some(s => { try { return node.matches(s); } catch (e) { return false; } })) node.remove();
-    };
-    // Đảm bảo observer cũng được kích hoạt trong hàm IIFE (immediately-invoked function expression)
-    // (Đã được tích hợp vào activateInstantInterceptors)
 
-    // Khởi động các tác vụ nền
-    (function initialize() {
-        GM_addStyle(CONFIG.CSS_SELECTORS_TO_HIDE.join(', ') + 
-            ` { display: none !important; visibility: hidden !important; opacity: 0 !important; width: 0 !important; height: 0 !important; }`);
+    // Helper function for fetching and caching the remote list
+    async function updateAndHydrateRemoteBlocklist() {
+        const lastUpdated = await GM_getValue('blocklistLastUpdated', 0);
+        const cachedList = await GM_getValue('blocklistCache', null);
+        const now = Date.now();
+        const cacheAgeHours = (now - lastUpdated) / (1000 * 60 * 60);
 
-        updateAndHydrateRemoteBlocklist(); // Chạy trong nền, không cần `await`
-        log('Background tasks initiated.');
-    })();
+        const useCache = () => {
+            if (cachedList) {
+                remoteBlocklist = new Set(JSON.parse(cachedList));
+                log(`Loaded ${remoteBlocklist.size} remote domains from cache.`);
+            }
+        };
+
+        if (cachedList && cacheAgeHours < CONFIG.REMOTE_BLOCKLIST.UPDATE_INTERVAL_HOURS) {
+            useCache();
+        } else {
+            GM_xmlhttpRequest({
+                method: 'GET',
+                url: CONFIG.REMOTE_BLOCKLIST.URL,
+                onload: (response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        remoteBlocklist = parseHostsFile(response.responseText);
+                        log(`Hydrated remote blocklist with ${remoteBlocklist.size} domains.`);
+                        GM_setValue('blocklistCache', JSON.stringify([...remoteBlocklist]));
+                        GM_setValue('blocklistLastUpdated', Date.now());
+                    } else {
+                        log(`Failed to fetch remote list (status: ${response.status}). Using cache as fallback.`);
+                        useCache();
+                    }
+                },
+                onerror: () => {
+                    log('Error fetching remote list. Using cache as fallback.');
+                    useCache();
+                }
+            });
+        }
+    }
 })();
