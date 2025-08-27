@@ -36,7 +36,7 @@ You can customize the script's behavior by editing it directly in the Tampermonk
 
 Contributions are welcome! You can help improve this script in several ways:
 
--   **Report Issues:** If you find a website where the script doesn't work or breaks functionality, please [open an issue](https://github.com/NoName/universal-ad-bypasser/issues).
+-   **Report Issues:** If you find a website where the script doesn't work or breaks functionality, please [open an issue](https://github.com/0101010KingofCode0101010/universal-ad-bypasser/issues).
 -   **Suggest Blocklist Additions:** Find a new ad domain? Open an issue or create a pull request to add it to the `BLOCKLIST`.
 -   **Improve the Code:** Feel free to fork the repository and submit a pull request with your enhancements.
 
@@ -46,4 +46,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## ✨ Credits
 
-Developed by [NoName](https://github.com/NoName).
+Developed by [NoName](https://github.com/0101010KingofCode0101010).
