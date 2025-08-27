@@ -2,37 +2,33 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-The ultimate companion for your ad-blocker. This script combines a massive, auto-updating domain blocklist with precise, keyword-based filtering to defeat even the most aggressive, self-hosted anti-adblock scripts.
+The ultimate companion for your ad-blocker, now featuring an **Instant-On Interception Engine** to defeat the most aggressive, time-sensitive anti-adblock scripts.
 
 ---
 
-## ✨ NEW in v2.1: The Hybrid Blocking Engine!
+## ✨ NEW in v2.2: The Instant-On Interception Engine!
 
-This version introduces a powerful **dual-check mechanism**, getting the best of both worlds:
+Some websites are tricky. They run an anti-adblock check the *instant* the page starts loading, trying to win the "race" against blocker scripts. Version 2.2 is engineered to win that race, every time.
 
-1.  **Precision Keyword Filtering (Your `MANUAL_BLOCKLIST`):**
-    *   **How:** Scans the *entire URL* for specific keywords (like `adblock`, `anti-adblock`).
-    *   **Why:** This is the "scalpel". It catches tricky, self-hosted scripts (e.g., `domain.com/js/anti-adblock.js`) that broad-spectrum blockers miss. This is what makes it work on sites like `lxmanga`.
+**How it works:**
+1.  **Instant Activation:** The moment the script runs, its core blocking functions (`fetch`, `XHR`) are *immediately* activated. There is zero delay.
+2.  **Priority Blocking:** It instantly starts blocking using a small, high-priority list of known anti-adblock "bait" domains and keywords.
+3.  **Background Hydration:** While the priority shield is active, the script silently fetches and "hydrates" the massive community blocklist in the background for comprehensive protection.
 
-2.  **Broad Domain Blocking (The `REMOTE_BLOCKLIST`):**
-    *   **How:** Checks the *domain name* against a massive, auto-updating list of tens of thousands of known ad/tracker domains.
-    *   **Why:** This is the "shotgun". It provides comprehensive, high-performance blocking of common ad networks.
-
-This hybrid engine ensures maximum compatibility and blocking power, crushing both common ads and site-specific anti-adblock.
+This new architecture ensures that no anti-adblock script can slip through during the first few milliseconds of page load.
 
 ## 🚀 Features
 
--   **✅ Hybrid Blocking Engine:** Catches both broad ad-networks and specific anti-adblock scripts.
--   **✅ Auto-Updating Blocklist:** Stays current with thousands of rules from community sources.
+-   **✅ Instant-On Interception Engine:** Wins the race against the fastest anti-adblock scripts.
+-   **✅ Hybrid Blocking Power:** Combines a high-priority manual list with a massive, auto-updating community list.
 -   **✅ Your Ad-Blocker's Best Friend:** Works perfectly alongside uBlock Origin, AdGuard, etc.
--   **✅ Defeats Aggressive Anti-Adblock:** The #1 reason to use this script.
 -   **✅ Kills Popups & Pop-unders.**
--   **✅ Lightweight & Fast:** Caches the blocklist for instant performance.
+-   **✅ Lightweight & Fast:** Caches the main blocklist and uses an efficient, instant-on approach.
 
 ## 🔧 Installation
 
 1.  You need a userscript manager like **[Tampermonkey](https://www.tampermonkey.net/)**.
-2.  Click the link below to install the latest version:
+2.  Click the link below to get the latest, most powerful version:
 
     **➡️ [Install Universal Ad-Bypasser](https://github.com/0101010KingofCode0101010/universal-ad-bypasser/raw/main/universal-ad-bypasser.user.js)**
 
@@ -40,15 +36,12 @@ This hybrid engine ensures maximum compatibility and blocking power, crushing bo
 
 ## ⚙️ Configuration
 
-You can power-up the script by editing it in the Tampermonkey dashboard.
-
--   `MANUAL_BLOCKLIST`: Add keywords here to stop a specific site's anti-adblock.
--   `REMOTE_BLOCKLIST`: Change the URL to a different hosts file or adjust the update interval.
--   `CSS_SELECTORS_TO_HIDE`: Add CSS classes/IDs to hide empty ad boxes.
+-   `MANUAL_BLOCKLIST`: This is now your high-priority list. Add keywords or domains here that need to be blocked *instantly*.
+-   `REMOTE_BLOCKLIST`: The URL for the main community list, loaded in the background.
 
 ## 🤝 How to Contribute
 
--   **Report a Site:** Find a website that defeats the script? Please [open an issue](https://github.com/0101010KingofCode0101010/universal-ad-bypasser/issues).
+-   **Report a Site:** Find a website that still gets through? [Open an issue](https://github.com/0101010KingofCode0101010/universal-ad-bypasser/issues). Your report helps make the script smarter.
 -   **Suggest Improvements:** Fork the repository and submit a pull request!
 
 ## 📄 License
