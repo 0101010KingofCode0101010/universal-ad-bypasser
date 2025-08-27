@@ -20,7 +20,7 @@ A powerful, lightweight, and configurable userscript to block ads, popups, track
 1.  You need a userscript manager. The most popular one is **[Tampermonkey](https://www.tampermonkey.net/)**. Install it for your browser (Chrome, Firefox, Edge, Safari, etc.).
 2.  Click the installation link below to add the script to Tampermonkey:
 
-    **➡️ [Install Universal Ad-Bypasser](https://github.com/NoName/universal-ad-bypasser/raw/main/universal-ad-bypasser.user.js)**
+    **➡️ [Install Universal Ad-Bypasser](https://github.com/0101010KingofCode0101010/universal-ad-bypasser/raw/main/universal-ad-bypasser.user.js)**
 
 3.  Tampermonkey will open a new tab. Review the script's permissions and click **"Install"**.
 
