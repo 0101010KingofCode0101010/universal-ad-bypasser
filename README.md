@@ -2,38 +2,39 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-The ultimate ad-blocker companion, featuring a **Stealth Proxy Engine** to bypass function integrity checks and an advanced **Just-In-Time Click Interceptor** to block event-based popups.
+The ultimate companion for uBlock Origin. This script defeats anti-adblock by **actively sabotaging detection scripts**, allowing your primary ad-blocker to work undetected.
 
 ---
 
-## ✨ NEW in v2.4: Just-In-Time Click Interception!
+## The uBlock Origin Problem & The Sabotage Solution
 
-**The Problem:** Many sites have defeated traditional popup blockers by attaching a listener to the entire page. They wait for your *first click*—anywhere on the page—to trigger an unwanted popup.
+**The Problem:** You have a powerful ad-blocker like uBlock Origin, but some websites *still* detect it. This is because modern anti-adblock doesn't just check for blocked ads; it looks for the *side effects* of uBlock, like failed network requests for "bait" files.
 
-**The Solution:** This version introduces a **Just-In-Time Click Interceptor**.
--   **It gets ahead of the website.** Using event capturing, our script's click listener runs *before* the website's.
--   **It temporarily disarms `window.open`.** For a few milliseconds after your first click, the ability to open popups is neutralized.
--   **The site's popup script fires, but its weapon is disabled.** It tries to call `window.open` and fails silently.
--   **Normal functionality is restored instantly,** so legitimate links and actions are not affected.
+**The Solution: The Sabotage Engine (v2.5)**
+This script now acts as a "Special Operations" unit that goes in *before* the main army. It uses a **Honeypot technique** to neutralize the anti-adblock script before it can even run its checks.
 
-This surgical strike defeats the most common and annoying form of pop-under ads.
+-   **It injects a decoy script** before anything else on the page loads.
+-   **It defines common ad-related variables** (like `googletag`, `adsbygoogle`) as harmless, empty objects.
+-   The anti-adblock script wakes up, sees these variables already exist, and tries to use them.
+-   **It fails silently,** completely neutralized before it ever gets a chance to detect uBlock Origin's network-level blocking.
+
+Your userscript provides the stealth, while uBlock Origin provides the firepower.
 
 ## 🚀 Features
 
--   **✅ Advanced Popup Blocking:** Defeats "first-click" and event-based popups.
--   **✅ Undetectable Stealth Engine:** Bypasses anti-adblock that uses function integrity (`toString()`) checks.
+-   **✅ Sabotage Engine:** Neutralizes anti-adblock scripts by creating "honeypot" variables, providing cover for uBlock Origin.
+-   **✅ Undetectable Stealth Proxy:** A secondary defense that intercepts function calls to bypass integrity checks.
 -   **✅ Hybrid Blocking Power:** Combines a high-priority manual list with a massive, auto-updating community list.
--   **✅ Your Ad-Blocker's Best Friend:** Works in harmony with uBlock Origin, AdGuard, etc.
--   **✅ Lightweight & Fast:** Caches the main blocklist for instant performance.
+-   **✅ Advanced Popup Blocking:** Defeats "first-click" and event-based popups.
 
 ## 🔧 Installation
 
 1.  You need a userscript manager like **[Tampermonkey](https://www.tampermonkey.net/)**.
-2.  Click the link below to install the latest, most powerful version:
+2.  Install this script by clicking the link below:
 
     **➡️ [Install Universal Ad-Bypasser](https://github.com/0101010KingofCode0101010/universal-ad-bypasser/raw/main/universal-ad-bypasser.user.js)**
 
-3.  Click **"Install"** in the Tampermonkey tab that opens.
+3.  Click **"Install"**. Keep uBlock Origin enabled for maximum effect.
 
 ## 🤝 How to Contribute
 
