@@ -2,27 +2,28 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-The ultimate ad-blocker companion, re-engineered with a **Stealth Proxy Engine** to be completely undetectable by advanced anti-adblock scripts.
+The ultimate ad-blocker companion, featuring a **Stealth Proxy Engine** to bypass function integrity checks and an advanced **Just-In-Time Click Interceptor** to block event-based popups.
 
 ---
 
-## ✨ NEW in v2.3: The Stealth Proxy Engine!
+## ✨ NEW in v2.4: Just-In-Time Click Interception!
 
-**The Problem:** Modern anti-adblock scripts don't just check if ads are blocked. They check if you've *tampered* with browser functions like `window.fetch`. Previous versions of this script modified these functions directly, leaving a clear footprint that was easy to detect via a `function.toString()` check.
+**The Problem:** Many sites have defeated traditional popup blockers by attaching a listener to the entire page. They wait for your *first click*—anywhere on the page—to trigger an unwanted popup.
 
-**The Solution:** This version introduces a revolutionary **Proxy-based Interception Engine**.
--   **It wraps the `window` object** in an invisible proxy layer.
--   **It does NOT modify original browser functions.** `window.fetch` remains untouched and passes any integrity check.
--   **It intercepts calls on-the-fly.** When a site's script tries to *use* `window.fetch`, our proxy stealthily hands it a fake, filtered version instead of the real one.
+**The Solution:** This version introduces a **Just-In-Time Click Interceptor**.
+-   **It gets ahead of the website.** Using event capturing, our script's click listener runs *before* the website's.
+-   **It temporarily disarms `window.open`.** For a few milliseconds after your first click, the ability to open popups is neutralized.
+-   **The site's popup script fires, but its weapon is disabled.** It tries to call `window.open` and fails silently.
+-   **Normal functionality is restored instantly,** so legitimate links and actions are not affected.
 
-The anti-adblock script is tricked into using our filtered functions, believing they are the original, untampered ones. **This makes the script virtually undetectable.**
+This surgical strike defeats the most common and annoying form of pop-under ads.
 
 ## 🚀 Features
 
--   **✅ Undetectable Stealth Engine:** Bypasses advanced anti-adblock that uses function integrity (`toString()`) checks.
+-   **✅ Advanced Popup Blocking:** Defeats "first-click" and event-based popups.
+-   **✅ Undetectable Stealth Engine:** Bypasses anti-adblock that uses function integrity (`toString()`) checks.
 -   **✅ Hybrid Blocking Power:** Combines a high-priority manual list with a massive, auto-updating community list.
 -   **✅ Your Ad-Blocker's Best Friend:** Works in harmony with uBlock Origin, AdGuard, etc.
--   **✅ Kills Popups & Pop-unders.**
 -   **✅ Lightweight & Fast:** Caches the main blocklist for instant performance.
 
 ## 🔧 Installation
